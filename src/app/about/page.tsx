@@ -9,16 +9,8 @@ export default function AboutPage() {
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-0">
       <section className="border border-border bg-white px-6 py-10 sm:px-10 sm:py-12">
-        <header className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <img src="/Scriptkin.png" alt="Scriptkin" className="h-12 w-auto object-contain" />
-          </div>
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center border border-foreground px-4 py-2 text-sm font-semibold uppercase tracking-[0.12em] hover:bg-foreground hover:text-background"
-          >
-            Связаться
-          </Link>
+        <header className="mb-10 flex items-center gap-3">
+          <img src="/Scriptkin.png" alt="Scriptkin" className="h-12 w-auto object-contain" />
         </header>
 
         <div className="grid gap-10 lg:grid-cols-3">
