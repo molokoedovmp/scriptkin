@@ -13,7 +13,7 @@ export function getSupabaseMiddlewareClient() {
     global: {
       headers: {
         "X-Client-Info": "scriptkin-next-middleware",
-        ...(headers ? { "X-Forwarded-For": headers().get("x-forwarded-for") ?? undefined } : {}),
+        // X-Forwarded-For убрали из-за типовых изменений headers()
       },
     },
     auth: {
