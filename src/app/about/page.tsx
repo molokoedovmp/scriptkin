@@ -11,13 +11,7 @@ export default function AboutPage() {
       <section className="border border-border bg-white px-6 py-10 sm:px-10 sm:py-12">
         <header className="mb-10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center border border-border bg-white">
-              <img src="/logo.png" alt="Scriptkin" className="h-10 w-10 object-contain" />
-            </div>
-            <div>
-              <h1 className="text-lg font-semibold sm:text-xl leading-tight">Scriptkin</h1>
-              <p className="text-sm text-muted-foreground">Веб‑команда</p>
-            </div>
+            <img src="/Scriptkin.png" alt="Scriptkin" className="h-12 w-auto object-contain" />
           </div>
           <Link
             href="/contact"
