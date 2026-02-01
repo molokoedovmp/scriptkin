@@ -4,10 +4,12 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-export function getSupabaseMiddlewareClient() {
+export async function getSupabaseMiddlewareClient() {
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error("Supabase env vars are missing");
   }
+
+  const cookieStore = await cookies();
 
   return createClient(supabaseUrl, supabaseAnonKey, {
     global: {
@@ -21,7 +23,7 @@ export function getSupabaseMiddlewareClient() {
       autoRefreshToken: false,
       detectSessionInUrl: false,
       storage: {
-        getItem: (key) => cookies().get(key)?.value ?? null,
+        getItem: (key) => cookieStore.get(key)?.value ?? null,
         setItem: () => {},
         removeItem: () => {},
       },
