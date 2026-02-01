@@ -65,13 +65,7 @@ export default function AboutPage() {
 
           <div className="space-y-6">
             <div className="space-y-2">
-              <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Фокус студии</p>
-              <h3 className="text-lg font-semibold">Техническая точность</h3>
-              <p className="text-sm text-muted-foreground">
-                Каждый пиксель связан с задачей продукта. Чистая композиция на всех разрешениях и высокие Web Vitals.
-              </p>
-            </div>
-            <div className="space-y-2">
+            <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">Фокус студии</p>
               <h3 className="text-lg font-semibold">Продуктовый подход</h3>
               <p className="text-sm text-muted-foreground">
                 Форма подчинена задаче: экран ведёт к нужному действию — активация, покупка или удержание.
@@ -93,7 +87,7 @@ export default function AboutPage() {
         </div>
 
         <div className="mt-10 flex items-center gap-3 text-xs text-muted-foreground">
-          <img src="/Scriptkin.png" alt="Scriptkin" className="h-6 w-auto object-contain" />
+          <img src="/Skriptkin.png" alt="Scriptkin" className="h-6 w-auto object-contain" />
           <span>© {new Date().getFullYear()} Скрипткин. Все права защищены.</span>
         </div>
       </section>
