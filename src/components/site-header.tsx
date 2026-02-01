@@ -10,6 +10,7 @@ const links = [
   { href: "/portfolio", label: "Портфолио" },
   { href: "/blog", label: "Блог" },
   { href: "/services", label: "Услуги" },
+  { href: "/about", label: "О нас" },
   { href: "/contact", label: "Контакты" },
 ];
 
