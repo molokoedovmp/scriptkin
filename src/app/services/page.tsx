@@ -25,7 +25,7 @@ export default async function ServicesPage() {
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
-  const safeServices: Service[] = services || [];
+  const safeServices: Service[] = Array.isArray(services) ? services : [];
 
   // группировка по первому тегу
   const grouped = safeServices.reduce<Record<string, Service[]>>((acc, item) => {
