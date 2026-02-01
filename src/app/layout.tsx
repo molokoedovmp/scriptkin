@@ -5,19 +5,19 @@ import { SiteHeader } from "@/components/site-header";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin"],
   display: "swap",
 });
 
 const jetBrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin"],
   display: "swap",
 });
 
 const manrope = Manrope({
   variable: "--font-manrope",
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin"],
   display: "swap",
 });
 
