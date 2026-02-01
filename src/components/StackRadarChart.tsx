@@ -22,10 +22,10 @@ export const description = "Радарный график по этапам ра
 
 const chartData = [
   { tech: "Прототип", readiness: 100 },
-  { tech: "База данных", readiness: 65 },
-  { tech: "Бэкенд", readiness: 70 },
-  { tech: "Фронтенд", readiness: 80 },
-  { tech: "Деплой", readiness: 90 },
+  { tech: "База данных", readiness: 70 },
+  { tech: "Бэкенд", readiness: 80 },
+  { tech: "Фронтенд", readiness: 90 },
+  { tech: "CI/CD", readiness: 85 },
   { tech: "Полный цикл", readiness: 100 },
 ];
 
@@ -50,8 +50,8 @@ export function StackRadarChart() {
         >
           <RadarChart data={chartData}>
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-            <PolarGrid gridType="circle" />
-            <PolarAngleAxis dataKey="tech" />
+          <PolarGrid gridType="circle" />
+          <PolarAngleAxis dataKey="tech" tick={{ fontSize: 12 }} />
             <Radar
               dataKey="readiness"
               fill="var(--color-readiness)"

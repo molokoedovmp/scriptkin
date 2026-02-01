@@ -68,9 +68,9 @@ const tiles = [
     href: "/contact",
   },
   {
-    title: "Готовы взяться за любой этап",
+    title: "О нас",
     description: "Подключимся на нужном этапе или возьмём за создание всего проекта.",
-    href: "/contact",
+    href: "/about",
   },
 ];
 
@@ -90,7 +90,7 @@ export default function Home() {
           </div>
           <div className="relative mx-auto max-w-4xl space-y-4 text-center">
             <p className="text-xs uppercase tracking-[0.08em] text-muted-foreground">
-              Скрипткин · web-разработка · дизайн · инфраструктура
+              Скрипткин 
             </p>
             <h1 className="text-3xl font-semibold sm:text-5xl">
               Создаём и запускаем сайты на современных технологиях
@@ -131,8 +131,8 @@ export default function Home() {
                     Любые задачи по разработке сайта на современных технологиях.
                   </h2>
                   <p className="text-base text-muted-foreground">
-                    Собираем проект с нуля, правим готовый код, переносим лендинг с конструкторов, подключаем домен и хостинг, настраиваем деплой (Vercel, Render, VPS). Включаемся на любом этапе и доводим до стабильного продакшена.
-                  </p>
+                    Собираем проект с нуля, правим готовый код, переносим лендинг с конструкторов, подключаем домен и хостинг, настраиваем деплой (Render, VPS, любые CI/CD). Включаемся на любом этапе и доводим до стабильного продакшена.
+              </p>
                 </div>
               </div>
               <div className="flex items-center justify-between border-t border-border px-8 py-6 text-sm text-muted-foreground">
