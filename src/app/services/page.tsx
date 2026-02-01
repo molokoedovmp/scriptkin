@@ -19,14 +19,16 @@ export const metadata = {
 
 export default async function ServicesPage() {
   const supabase = await getSupabaseServerClient();
-  const { data: services = [] } = await supabase
+  const { data: services } = await supabase
     .from("services")
     .select("title, slug, description, price_from, tags, published_at")
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
+  const safeServices: Service[] = services || [];
+
   // группировка по первому тегу
-  const grouped = services.reduce<Record<string, Service[]>>((acc, item) => {
+  const grouped = safeServices.reduce<Record<string, Service[]>>((acc, item) => {
     const key = item.tags?.[0] || "другие";
     if (!acc[key]) acc[key] = [];
     acc[key].push(item);
