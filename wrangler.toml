@@ -1,0 +1,9 @@
+name = "scriptkin"
+main = ".vercel/output/static/_worker.js"
+compatibility_date = "2026-02-04"
+compatibility_flags = ["nodejs_compat"]
+
+assets = { directory = ".vercel/output/static" }
+
+# Environment variables are expected to be configured in Cloudflare dashboard or via `wrangler secret`.
+# Do not commit secrets into this file.
