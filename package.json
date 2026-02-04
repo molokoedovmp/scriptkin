@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && npx @cloudflare/next-on-pages@latest --experimental-minify",
+    "build": "next build",
+    "pages:build": "next build && npx @cloudflare/next-on-pages@latest",
     "start": "next start",
     "lint": "eslint"
   },
