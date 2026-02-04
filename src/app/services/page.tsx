@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { getSupabaseServerClient } from "@/utils/supabase/server";
 
+export const runtime = "edge";
+
 type Service = {
   title: string;
   slug: string;

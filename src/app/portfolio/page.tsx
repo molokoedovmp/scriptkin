@@ -4,6 +4,8 @@ import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getSupabaseServerClient } from "@/utils/supabase/server";
 
+export const runtime = "edge";
+
 export const revalidate = 0;
 
 async function getProjects() {
