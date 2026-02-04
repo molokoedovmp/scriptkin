@@ -3,6 +3,7 @@ import { getSupabaseServerClient } from "@/utils/supabase/server";
 
 export const runtime = "edge";
 
+
 export const revalidate = 0;
 
 function isAuthorized(req: Request) {

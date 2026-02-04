@@ -6,8 +6,6 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import dynamic from "next/dynamic";
 
-export const runtime = "edge";
-
 const BlockNoteViewer = dynamic(() => import("@/components/BlockNoteViewer"), { ssr: false });
 
 type Service = {

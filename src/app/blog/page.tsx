@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 import {
-export const runtime = "edge";
 
   Card,
   CardContent,
@@ -10,6 +9,8 @@ export const runtime = "edge";
   CardTitle,
 } from "@/components/ui/card";
 import { getSupabaseServerClient } from "@/utils/supabase/server";
+
+export const runtime = "edge";
 
 export const metadata = {
   title: "Блог — Скрипткин",

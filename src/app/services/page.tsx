@@ -4,6 +4,7 @@ import { getSupabaseServerClient } from "@/utils/supabase/server";
 
 export const runtime = "edge";
 
+
 type Service = {
   title: string;
   slug: string;
