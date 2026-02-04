@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "pages:build": "next build && npx @cloudflare/next-on-pages@latest",
+    "pages:build": "next build && npx @cloudflare/next-on-pages@latest && cp .assetsignore .vercel/output/static/.assetsignore",
     "start": "next start",
     "lint": "eslint"
   },
