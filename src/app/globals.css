@@ -158,3 +158,13 @@
   background-size: 36px 36px;
   background-position: top left;
 }
+
+.bg-dots {
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--border) 55%, transparent) 1.2px,
+    transparent 1.2px
+  );
+  background-size: 22px 22px;
+  background-position: top left;
+}

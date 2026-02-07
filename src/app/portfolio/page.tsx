@@ -21,43 +21,27 @@ async function getProjects() {
   return data ?? [];
 }
 
-async function getHeroProject() {
-  const supabase = await getSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("portfolio_posts")
-    .select("cover_url, tags")
-    .eq("status", "published")
-    .contains("tags", ["hero"])
-    .order("published_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  if (error) return null;
-  return data ?? null;
-}
-
 export default async function PortfolioPage() {
-  const heroProject = await getHeroProject();
   const projects = await getProjects();
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="mx-auto w-full max-w-6xl border-l border-r border-border">
-        <section className="border-b border-border bg-white px-6 py-16 sm:py-20">
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] md:items-center">
-            {heroProject?.cover_url ? (
-              <div
-                className="aspect-[4/3] w-full bg-cover bg-center"
-                style={{ backgroundImage: `url('${heroProject.cover_url}')` }}
-                aria-hidden
-              />
-            ) : (
-              <div className="aspect-[4/3] w-full bg-muted" aria-hidden />
-            )}
-            <div className="space-y-4">
-              <p className="text-xs uppercase tracking-[0.08em] text-muted-foreground">
-                Портфолио · SaaS · e‑commerce · лендинги
-              </p>
-              <h1 className="text-3xl font-semibold sm:text-5xl">
-                Запускаем продукты и лендинги, которые выдерживают трафик и растут.
+    <div className="min-h-screen bg-background text-foreground bg-subtle-grid">
+      <div className="mx-auto w-full max-w-7xl border-l border-r border-border">
+        <section className="border-b border-border bg-white bg-dots px-4 py-16 sm:min-h-[65vh] sm:px-8 sm:py-20">
+          <div className="relative">
+            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-center">
+            <div className="order-1">
+              <div className="aspect-[5/3] w-full overflow-visible">
+                <img
+                  src="/portfolio-hero.jpg"
+                  alt="Превью проекта"
+                  className="h-full w-full scale-[1.2] object-contain"
+                  loading="eager"
+                />
+              </div>
+            </div>
+            <div className="order-2 space-y-5">
+              <h1 className="text-2xl font-semibold leading-tight sm:text-4xl">
+                Запускаем продукты и лендинги.
               </h1>
               <p className="text-base text-muted-foreground sm:text-lg">
                 Сборка интерфейсов, API, биллинг, аналитика, деплой. Подключаемся на любом этапе и
@@ -73,6 +57,7 @@ export default async function PortfolioPage() {
                 </Link>
               </Button>
             </div>
+          </div>
           </div>
         </section>
 
