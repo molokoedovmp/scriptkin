@@ -4,5 +4,10 @@ services:
     container_name: scriptkin-web
     restart: unless-stopped
     env_file: .env
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+    extra_hosts:
+      - "s3.skriptkin.ru:95.163.231.171"
     ports:
       - "3004:3004"
