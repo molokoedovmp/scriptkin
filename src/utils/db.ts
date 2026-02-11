@@ -1,38 +1,42 @@
 import { Pool, type QueryResult, type QueryResultRow } from "pg";
 
-const connectionString = process.env.DATABASE_URL;
-
-if (!connectionString) {
-  throw new Error("DATABASE_URL is not set");
-}
-
 const globalForPg = globalThis as unknown as { pgPool?: Pool };
 
-let ssl: { rejectUnauthorized: boolean } | undefined;
-try {
-  const url = new URL(connectionString);
-  if (url.searchParams.get("sslmode") === "require") {
-    ssl = { rejectUnauthorized: false };
+function getPool() {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not set");
   }
-} catch {
-  // ignore invalid URL parsing, pg can still handle the connection string
-}
 
-const pool =
-  globalForPg.pgPool ??
-  new Pool({
+  if (globalForPg.pgPool) return globalForPg.pgPool;
+
+  let ssl: { rejectUnauthorized: boolean } | undefined;
+  try {
+    const url = new URL(connectionString);
+    if (url.searchParams.get("sslmode") === "require") {
+      ssl = { rejectUnauthorized: false };
+    }
+  } catch {
+    // ignore invalid URL parsing, pg can still handle the connection string
+  }
+
+  const pool = new Pool({
     connectionString,
     ssl,
   });
 
-if (process.env.NODE_ENV !== "production") {
-  globalForPg.pgPool = pool;
+  if (process.env.NODE_ENV !== "production") {
+    globalForPg.pgPool = pool;
+  }
+
+  return pool;
 }
 
 export async function query<T extends QueryResultRow = QueryResultRow>(
   text: string,
   params?: unknown[]
 ): Promise<QueryResult<T>> {
+  const pool = getPool();
   return pool.query(text, params);
 }
 
