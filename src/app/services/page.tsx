@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { getSupabaseServerClient } from "@/utils/supabase/server";
+import { query } from "@/utils/db";
 
-export const runtime = "edge";
 
 
 type Service = {
@@ -21,14 +20,16 @@ export const metadata = {
 };
 
 export default async function ServicesPage() {
-  const supabase = await getSupabaseServerClient();
-  const { data: services } = await supabase
-    .from("services")
-    .select("title, slug, description, price_from, tags, published_at")
-    .eq("status", "published")
-    .order("published_at", { ascending: false });
-
-  const safeServices: Service[] = Array.isArray(services) ? services : [];
+  let safeServices: Service[] = [];
+  try {
+    const { rows } = await query<Service>(
+      "SELECT title, slug, description, price_from, tags, published_at FROM services WHERE status = $1 ORDER BY published_at DESC",
+      ["published"]
+    );
+    safeServices = rows;
+  } catch {
+    safeServices = [];
+  }
 
   // группировка по первому тегу
   const grouped = safeServices.reduce<Record<string, Service[]>>((acc, item) => {

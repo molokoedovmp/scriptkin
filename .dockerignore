@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.env.*
+node_modules
+npm-debug.log*
+*.log
+.next
+coverage
+.turbo
+.vercel
+.DS_Store
+scripts/bad_content
+portfolio_posts_rows.json
+portfolio_posts_rows.sql
+services_rows.json

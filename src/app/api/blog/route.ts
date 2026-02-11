@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSupabaseServerClient } from "@/utils/supabase/server";
-
-export const runtime = "edge";
-
-
+import { parseTags, query } from "@/utils/db";
 export const revalidate = 0;
 
 function isAuthorized(req: Request) {
@@ -14,40 +10,47 @@ function isAuthorized(req: Request) {
 }
 
 export async function GET() {
-  const supabase = await getSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("title, slug, excerpt, cover_url, published_at, tags")
-    .eq("status", "published")
-    .order("published_at", { ascending: false })
-    .limit(50);
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  return NextResponse.json({ posts: data ?? [] });
+  try {
+    const { rows } = await query(
+      "SELECT title, slug, excerpt, cover_url, published_at, tags FROM blog_posts WHERE status = $1 ORDER BY published_at DESC LIMIT 50",
+      ["published"]
+    );
+    return NextResponse.json({ posts: rows ?? [] });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || "db error" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
   if (!isAuthorized(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const body = await req.json();
-  const supabase = await getSupabaseServerClient();
+  const tags = parseTags(body.tags);
+  const publishedAt = body.published_at ?? new Date().toISOString();
+  const contentValue =
+    body.content === null || body.content === undefined
+      ? null
+      : typeof body.content === "string"
+        ? body.content
+        : JSON.stringify(body.content);
 
-  const payload = {
-    title: body.title ?? "",
-    slug: body.slug ?? "",
-    excerpt: body.excerpt ?? null,
-    cover_url: body.cover_url ?? null,
-    tags: Array.isArray(body.tags)
-      ? body.tags
-      : typeof body.tags === "string"
-        ? body.tags.split(",").map((t: string) => t.trim()).filter(Boolean)
-        : [],
-    content: body.content ?? null,
-    status: body.status ?? "published",
-    published_at: body.published_at ?? new Date().toISOString(),
-  };
-
-  const { error, data } = await supabase.from("blog_posts").insert([payload]).select("slug").single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true, slug: data?.slug });
+  try {
+    const { rows } = await query<{ slug: string }>(
+      `INSERT INTO blog_posts (title, slug, excerpt, cover_url, tags, content, status, published_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       RETURNING slug`,
+      [
+        body.title ?? "",
+        body.slug ?? "",
+        body.excerpt ?? null,
+        body.cover_url ?? null,
+        tags,
+        contentValue,
+        body.status ?? "published",
+        publishedAt,
+      ]
+    );
+    return NextResponse.json({ ok: true, slug: rows[0]?.slug });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || "db error" }, { status: 500 });
+  }
 }

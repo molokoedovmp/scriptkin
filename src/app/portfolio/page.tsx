@@ -2,33 +2,39 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { getSupabaseServerClient } from "@/utils/supabase/server";
+import { query } from "@/utils/db";
 
-export const runtime = "edge";
 
 
 export const revalidate = 0;
 
 async function getProjects() {
-  const supabase = await getSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("portfolio_posts")
-    .select("title, slug, excerpt, cover_url, tags, published_at")
-    .eq("status", "published")
-    .order("published_at", { ascending: false })
-    .limit(30);
-  if (error) return [];
-  return data ?? [];
+  try {
+    const { rows } = await query<{
+      title: string;
+      slug: string;
+      excerpt: string | null;
+      cover_url: string | null;
+      tags: string[] | null;
+      published_at: string | null;
+    }>(
+      "SELECT title, slug, excerpt, cover_url, tags, published_at FROM portfolio_posts WHERE status = $1 ORDER BY published_at DESC LIMIT 30",
+      ["published"]
+    );
+    return rows;
+  } catch {
+    return [];
+  }
 }
 
 export default async function PortfolioPage() {
   const projects = await getProjects();
   return (
     <div className="min-h-screen bg-background text-foreground bg-subtle-grid">
-      <div className="mx-auto w-full max-w-7xl border-l border-r border-border">
-        <section className="border-b border-border bg-white bg-dots px-4 py-16 sm:min-h-[65vh] sm:px-8 sm:py-20">
+      <div className="mx-auto w-full max-w-[1200px] border-l border-r border-border">
+        <section className="border-b border-border bg-white bg-dots px-6 py-16 sm:min-h-[65vh] sm:px-10 sm:py-20">
           <div className="relative">
-            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-center">
+          <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-12 md:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] md:items-center">
             <div className="order-1">
               <div className="aspect-[5/3] w-full overflow-visible">
                 <img

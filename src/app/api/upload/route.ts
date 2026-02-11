@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-
-export const runtime = "edge";
-
-
+import { randomUUID } from "crypto";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 export const revalidate = 0;
 
 function isAuthorized(req: Request) {
@@ -16,10 +13,14 @@ function isAuthorized(req: Request) {
 export async function POST(req: Request) {
   if (!isAuthorized(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!anon || !url) {
-    return NextResponse.json({ error: "Supabase env missing" }, { status: 500 });
+  const endpoint = process.env.S3_ENDPOINT;
+  const accessKeyId = process.env.S3_ACCESS_KEY;
+  const secretAccessKey = process.env.S3_SECRET_KEY;
+  const bucketName = process.env.S3_BUCKET;
+  const region = process.env.S3_REGION || "ru-1";
+
+  if (!endpoint || !accessKeyId || !secretAccessKey || !bucketName) {
+    return NextResponse.json({ error: "S3 env missing" }, { status: 500 });
   }
 
   const form = await req.formData();
@@ -28,24 +29,41 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "file is required" }, { status: 400 });
   }
 
-  const bucket = form.get("bucket")?.toString() || "assets";
-  const folder = form.get("folder")?.toString() || "uploads";
+  const rawBucket = form.get("bucket")?.toString() || "assets";
+  const rawFolder = form.get("folder")?.toString() || "uploads";
 
-  // Используем публичный anon-key, требуется policy на bucket с разрешением insert для authenticated/anon
-  const supabase = createClient(url, anon);
+  const safeSegment = (value: string) => value.replace(/[^a-zA-Z0-9-_]/g, "");
+  const bucket = safeSegment(rawBucket) || "assets";
+  const folder = safeSegment(rawFolder) || "uploads";
 
   const ext = file.name.split(".").pop() || "bin";
-  const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const fileName = `${Date.now()}-${randomUUID()}.${ext}`;
 
-  const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
-    cacheControl: "3600",
-    upsert: false,
-    contentType: file.type || undefined,
+  const objectKey = `${bucket}/${folder}/${fileName}`;
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  const s3 = new S3Client({
+    endpoint,
+    region,
+    forcePathStyle: true,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
   });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: bucketName,
+      Key: objectKey,
+      Body: buffer,
+      ContentType: file.type || "application/octet-stream",
+      ACL: "public-read",
+    })
+  );
 
-  const { data: publicUrl } = supabase.storage.from(bucket).getPublicUrl(data.path);
+  const baseUrl = endpoint.replace(/\/$/, "");
+  const url = `${baseUrl}/${bucketName}/${objectKey}`;
 
-  return NextResponse.json({ path: data.path, url: publicUrl.publicUrl });
+  return NextResponse.json({ path: objectKey, url });
 }

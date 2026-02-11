@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSupabaseServerClient } from "@/utils/supabase/server";
-
-export const runtime = "edge";
-
-
+import { buildUpdate, parseTags, query } from "@/utils/db";
 export const revalidate = 0;
 
 function isAuthorized(req: Request) {
@@ -15,50 +11,68 @@ function isAuthorized(req: Request) {
 
 export async function GET(req: Request, ctx: { params: Promise<{ slug: string }> }) {
   const { slug } = await ctx.params;
-  const supabase = await getSupabaseServerClient();
-
-  let { data, error } = await supabase
-    .from("portfolio_posts")
-    .select("title, slug, excerpt, cover_url, published_at, tags, content, status")
-    .eq("slug", slug)
-    .eq("status", "published")
-    .single();
-
   const admin = isAuthorized(req);
-  if (error && admin) {
-    const res = await supabase
-      .from("portfolio_posts")
-      .select("title, slug, excerpt, cover_url, published_at, tags, content, status")
-      .eq("slug", slug)
-      .single();
-    data = res.data;
-    error = res.error;
+  try {
+    const { rows } = await query(
+      `SELECT title, slug, excerpt, cover_url, published_at, tags, content, status
+       FROM portfolio_posts
+       WHERE slug = $1 ${admin ? "" : "AND status = 'published'"}
+       LIMIT 1`,
+      [slug]
+    );
+    const project = rows[0];
+    if (!project) return NextResponse.json({ error: "not found" }, { status: 404 });
+    return NextResponse.json({ project });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || "not found" }, { status: 404 });
   }
-
-  if (!admin && data && data.status !== "published") {
-    return NextResponse.json({ error: "not published" }, { status: 404 });
-  }
-
-  if (error || !data) return NextResponse.json({ error: error?.message || "not found" }, { status: 404 });
-  return NextResponse.json({ project: data });
 }
 
 export async function PATCH(req: Request, ctx: { params: Promise<{ slug: string }> }) {
   if (!isAuthorized(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const { slug } = await ctx.params;
   const body = await req.json();
-  const supabase = await getSupabaseServerClient();
-  const updates = { ...body, updated_at: new Date().toISOString() };
-  const { error } = await supabase.from("portfolio_posts").update(updates).eq("slug", slug);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true });
+  const updates: Record<string, unknown> = { ...body };
+  if (Object.prototype.hasOwnProperty.call(body, "tags")) {
+    updates.tags = parseTags(body.tags);
+  }
+  if (Object.prototype.hasOwnProperty.call(body, "content")) {
+    updates.content =
+      body.content === null || body.content === undefined
+        ? null
+        : typeof body.content === "string"
+          ? body.content
+          : JSON.stringify(body.content);
+  }
+  const built = buildUpdate(updates, [
+    "title",
+    "slug",
+    "excerpt",
+    "cover_url",
+    "tags",
+    "content",
+    "status",
+    "published_at",
+  ]);
+  if (!built) return NextResponse.json({ ok: true });
+  try {
+    await query(`UPDATE portfolio_posts SET ${built.set} WHERE slug = $${built.values.length + 1}`, [
+      ...built.values,
+      slug,
+    ]);
+    return NextResponse.json({ ok: true });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || "db error" }, { status: 500 });
+  }
 }
 
 export async function DELETE(req: Request, ctx: { params: Promise<{ slug: string }> }) {
   if (!isAuthorized(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const { slug } = await ctx.params;
-  const supabase = await getSupabaseServerClient();
-  const { error } = await supabase.from("portfolio_posts").delete().eq("slug", slug);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true });
+  try {
+    await query("DELETE FROM portfolio_posts WHERE slug = $1", [slug]);
+    return NextResponse.json({ ok: true });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || "db error" }, { status: 500 });
+  }
 }

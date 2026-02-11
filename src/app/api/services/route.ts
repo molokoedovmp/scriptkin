@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSupabaseServerClient } from "@/utils/supabase/server";
-
-export const runtime = "edge";
-
-
+import { parseTags, query } from "@/utils/db";
 export const revalidate = 0;
 
 function isAuthorized(req: Request) {
@@ -14,38 +10,47 @@ function isAuthorized(req: Request) {
 }
 
 export async function GET() {
-  const supabase = await getSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("services")
-    .select("title, slug, description, price_from, tags, published_at")
-    .eq("status", "published")
-    .order("published_at", { ascending: false })
-    .limit(50);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ services: data ?? [] });
+  try {
+    const { rows } = await query(
+      "SELECT title, slug, description, price_from, tags, published_at FROM services WHERE status = $1 ORDER BY published_at DESC LIMIT 50",
+      ["published"]
+    );
+    return NextResponse.json({ services: rows ?? [] });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || "db error" }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {
   if (!isAuthorized(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const body = await req.json();
-  const supabase = await getSupabaseServerClient();
+  const tags = parseTags(body.tags);
+  const publishedAt = body.published_at ?? new Date().toISOString();
+  const contentValue =
+    body.content === null || body.content === undefined
+      ? null
+      : typeof body.content === "string"
+        ? body.content
+        : JSON.stringify(body.content);
 
-  const payload = {
-    title: body.title ?? "",
-    slug: body.slug ?? "",
-    description: body.description ?? null,
-    content: body.content ?? null,
-    price_from: body.price_from ?? null,
-    tags: Array.isArray(body.tags)
-      ? body.tags
-      : typeof body.tags === "string"
-        ? body.tags.split(",").map((t: string) => t.trim()).filter(Boolean)
-        : [],
-    status: body.status ?? "published",
-    published_at: body.published_at ?? new Date().toISOString(),
-  };
-
-  const { error, data } = await supabase.from("services").insert([payload]).select("slug").single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true, slug: data?.slug });
+  try {
+    const { rows } = await query<{ slug: string }>(
+      `INSERT INTO services (title, slug, description, content, price_from, tags, status, published_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       RETURNING slug`,
+      [
+        body.title ?? "",
+        body.slug ?? "",
+        body.description ?? null,
+        contentValue,
+        body.price_from ?? null,
+        tags,
+        body.status ?? "published",
+        publishedAt,
+      ]
+    );
+    return NextResponse.json({ ok: true, slug: rows[0]?.slug });
+  } catch (error: any) {
+    return NextResponse.json({ error: error?.message || "db error" }, { status: 500 });
+  }
 }
