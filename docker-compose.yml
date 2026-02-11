@@ -1,0 +1,8 @@
+services:
+  web:
+    image: scriptkin-web
+    container_name: scriptkin-web
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "3004:3004"
