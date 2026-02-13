@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Check, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import Stepper, { Step } from "@/components/Stepper";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,7 +14,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { cn } from "@/lib/utils";
+
+const CONTACT_EMAIL = "skriptkin@proton.me";
 
 export default function ContactClient() {
   const [name, setName] = useState("");
@@ -24,8 +25,13 @@ export default function ContactClient() {
   const [errText, setErrText] = useState<string | null>(null);
   const [dialog, setDialog] = useState<"none" | "ok" | "err">("none");
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit() {
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      setErrText("Заполните все поля.");
+      setStatus("err");
+      setDialog("err");
+      return;
+    }
     setStatus("sending");
     setErrText(null);
     try {
@@ -56,90 +62,127 @@ export default function ContactClient() {
   }, [status]);
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 lg:px-0">
-      <header className="mb-12 flex flex-col gap-4 border-b border-border pb-6">
-        <p className="text-sm uppercase tracking-[0.14em] text-muted-foreground">Контакты</p>
-        <h1 className="text-4xl font-semibold sm:text-5xl leading-tight">Расскажите о задаче</h1>
-        <p className="text-base text-muted-foreground max-w-2xl">
-          Пара абзацев, ссылки на продукт и сроки — вернёмся с планом, бюджетом и таймлайном.
-        </p>
-      </header>
+    <main className="min-h-screen bg-white text-black">
+      <div className="mx-auto w-full max-w-[1200px] px-6 py-16 lg:px-10">
+        <header className="space-y-4">
+          <p className="text-xs uppercase tracking-[0.32em] text-black/60">Контакты</p>
+          <h1 className="text-3xl font-semibold leading-tight sm:text-4xl">
+            Расскажите о задаче
+          </h1>
+          <p className="text-sm text-black/70 sm:text-base">
+            Пара абзацев, ссылки на продукт и сроки — вернёмся с планом, бюджетом и таймлайном.
+          </p>
+        </header>
 
-      <div className="flex flex-col gap-8">
-        <section className="border border-border bg-white p-8">
-          <div className="grid gap-6 md:grid-cols-[1.1fr_0.9fr] items-start">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <h2 className="text-2xl font-semibold">Свяжитесь с нами</h2>
-                <p className="text-sm text-muted-foreground">
-                  Отвечаем в течение рабочего дня. Если нужен NDA — подпишем сразу.
-                </p>
-              </div>
-              <div className="grid gap-3 text-sm">
-                <InfoRow label="Email" value="hello@scriptkin.studio" icon={<ArrowUpRight className="size-4" />} />
-                <InfoRow label="Telegram" value="@scriptkin" icon={<ArrowUpRight className="size-4" />} />
-                <InfoRow label="Форматы" value="Fixed price · T&M · Retainer" icon={<Check className="size-4" />} />
-                <div className="border border-border px-4 py-3 text-sm text-muted-foreground leading-relaxed">
-                  США · Европа · СНГ. Подстраиваемся под UTC и PST, созвоны в удобное окно.
-                </div>
-              </div>
-            </div>
+        <div className="my-8 h-px w-full bg-black/15" />
 
-            <div className="border border-border p-6">
-              <form className="space-y-5" onSubmit={onSubmit}>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium" htmlFor="name">
-                    Имя и компания
-                  </label>
-                  <Input
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Алексей, Scriptkin"
-                    className="rounded-none"
-                    required
-                  />
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">
+          <div className="w-full">
+            <Stepper
+              initialStep={1}
+              onFinalStepCompleted={handleSubmit}
+              backButtonText="Назад"
+              nextButtonText="Далее"
+              completeButtonText={status === "sending" ? "Отправляем..." : "Отправить"}
+              nextButtonProps={{ disabled: status === "sending" }}
+              className="items-stretch"
+              stepCircleContainerClassName="max-w-none w-full rounded-none shadow-none"
+              stepContainerClassName="border-b border-black/15 px-6 py-5"
+              contentClassName="px-10"
+              footerClassName="px-6 py-4"
+            >
+              <Step>
+              <div className="space-y-4">
+                <p className="text-xs uppercase tracking-[0.24em] text-black/60">Шаг 1 · Контакты</p>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="name">
+                      Имя и компания
+                    </label>
+                    <Input
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Алексей, Scriptkin"
+                      className="rounded-none border border-black/25 bg-white text-black focus-visible:ring-0"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="email">
+                      Email или Telegram
+                    </label>
+                    <Input
+                      id="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com / @username"
+                      className="rounded-none border border-black/25 bg-white text-black focus-visible:ring-0"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium" htmlFor="email">
-                    Email или Telegram
-                  </label>
-                  <Input
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com / @username"
-                    className="rounded-none"
-                    required
-                  />
+              </Step>
+              <Step>
+              <div className="space-y-4">
+                <p className="text-xs uppercase tracking-[0.24em] text-black/60">Шаг 2 · Задача</p>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="msg">
+                      Что нужно сделать
+                    </label>
+                    <Textarea
+                      id="msg"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Коротко опишите задачу и сроки"
+                      className="min-h-[200px] rounded-none border border-black/25 bg-white text-black focus-visible:ring-0"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium" htmlFor="msg">
-                    Что нужно сделать
-                  </label>
-                  <Textarea
-                    id="msg"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Лендинг под кампанию, интеграция с CRM, запуск в феврале"
-                    className="min-h-[200px] rounded-none"
-                    required
-                  />
+              </Step>
+              <Step>
+              <div className="space-y-4">
+                <p className="text-xs uppercase tracking-[0.24em] text-black/60">Шаг 3 · Проверка</p>
+                  <div className="space-y-3 text-sm text-black/70">
+                    <div>
+                      <div className="text-xs uppercase tracking-[0.2em] text-black/50">Имя</div>
+                      <div className="mt-1 text-sm font-semibold text-black">{name || "—"}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs uppercase tracking-[0.2em] text-black/50">Контакт</div>
+                      <div className="mt-1 text-sm font-semibold text-black">{email || "—"}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs uppercase tracking-[0.2em] text-black/50">Задача</div>
+                      <div className="mt-1 text-sm text-black/70">
+                        {message ? message.slice(0, 160) : "—"}
+                        {message && message.length > 160 ? "…" : ""}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-black/60">
+                    Проверьте данные и нажмите «Отправить».
+                  </p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Button
-                    type="submit"
-                    className="rounded-none bg-foreground text-background hover:bg-foreground/90"
-                    disabled={status === "sending"}
-                  >
-                    {status === "sending" ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
-                    Отправить
-                  </Button>
-                </div>
-              </form>
-            </div>
+              </Step>
+            </Stepper>
           </div>
-        </section>
+          <aside className="border border-black/15 px-5 py-4">
+            <p className="text-xs uppercase tracking-[0.24em] text-black/60">Почта</p>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="mt-2 block text-sm font-semibold">
+              {CONTACT_EMAIL}
+            </a>
+            <p className="mt-2 text-xs text-black/60">Ответ в течение рабочего дня.</p>
+            <div className="mt-5 space-y-3 text-sm">
+              <a href="/privacy" className="block underline-offset-4 hover:underline">
+                Политика конфиденциальности
+              </a>
+              <a href="/it" className="block underline-offset-4 hover:underline">
+                Сведения об IT-деятельности
+              </a>
+              <a href="/about" className="block underline-offset-4 hover:underline">
+                О нас
+              </a>
+            </div>
+          </aside>
+        </div>
       </div>
 
       <AlertDialog open={dialog === "ok"} onOpenChange={(open) => setDialog(open ? "ok" : "none")}>
@@ -161,7 +204,7 @@ export default function ContactClient() {
           <AlertDialogHeader>
             <AlertDialogTitle>Не удалось отправить</AlertDialogTitle>
             <AlertDialogDescription>
-              {errText || "Попробуйте ещё раз или напишите нам на hello@scriptkin.studio"}
+              {errText || `Попробуйте ещё раз или напишите нам на ${CONTACT_EMAIL}`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -170,27 +213,5 @@ export default function ContactClient() {
         </AlertDialogContent>
       </AlertDialog>
     </main>
-  );
-}
-
-function InfoRow({
-  label,
-  value,
-  icon,
-  className,
-}: {
-  label: string;
-  value: string;
-  icon?: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={cn("flex items-center justify-between border border-border px-4 py-3", className)}>
-      <div>
-        <div className="font-semibold">{label}</div>
-        <div className="text-muted-foreground">{value}</div>
-      </div>
-      {icon}
-    </div>
   );
 }

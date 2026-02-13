@@ -90,14 +90,6 @@ export default function PortfolioPostPage() {
           </div>
         </div>
 
-        {project.cover_url && (
-          <div
-            className="mt-8 aspect-[16/9] w-full bg-cover bg-center border border-border"
-            style={{ backgroundImage: `url('${project.cover_url}')` }}
-            aria-hidden
-          />
-        )}
-
         <div className="prose prose-neutral max-w-none py-10">
           <BlockNoteViewer content={project.content} />
         </div>

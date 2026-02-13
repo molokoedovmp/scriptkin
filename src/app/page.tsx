@@ -77,7 +77,7 @@ const tiles = [
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground bg-subtle-grid">
-      <div className="mx-auto w-full max-w-6xl border-l border-r border-border">
+      <div className="mx-auto w-full max-w-[1400px] border-l border-r border-border 2xl:max-w-[1600px]">
         {/* Центрированный hero с Threads на фоне (75% высоты экрана) */}
         <section className="relative flex min-h-[75vh] items-center justify-center overflow-hidden border-b border-border bg-white px-6 py-16 sm:py-24">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -206,7 +206,7 @@ export default function Home() {
             }}
             aria-hidden
           />
-          <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-6 px-6 py-16 text-center">
+          <div className="relative mx-auto flex w-full max-w-[1200px] flex-col items-center gap-6 px-6 py-16 text-center">
             <span className="rounded-full border border-slate-200 px-4 py-1 text-xs font-semibold text-slate-500">
               Контакты
             </span>

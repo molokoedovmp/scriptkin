@@ -46,12 +46,12 @@ export function StackRadarChart() {
       <CardContent className="pb-0 flex-1 flex items-center justify-center">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square w-full max-h-[360px] max-w-[360px]"
+          className="mx-auto aspect-square w-full max-h-[420px] max-w-[420px]"
         >
-          <RadarChart data={chartData}>
+          <RadarChart data={chartData} margin={{ top: 24, right: 32, bottom: 24, left: 32 }}>
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-          <PolarGrid gridType="circle" />
-          <PolarAngleAxis dataKey="tech" tick={{ fontSize: 12 }} />
+            <PolarGrid gridType="circle" />
+            <PolarAngleAxis dataKey="tech" tick={{ fontSize: 12 }} tickMargin={12} />
             <Radar
               dataKey="readiness"
               fill="var(--color-readiness)"

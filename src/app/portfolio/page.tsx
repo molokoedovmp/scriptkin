@@ -31,10 +31,10 @@ export default async function PortfolioPage() {
   const projects = await getProjects();
   return (
     <div className="min-h-screen bg-background text-foreground bg-subtle-grid">
-      <div className="mx-auto w-full max-w-[1200px] border-l border-r border-border">
-        <section className="border-b border-border bg-white bg-dots px-6 py-16 sm:min-h-[65vh] sm:px-10 sm:py-20">
+      <div className="mx-auto w-full max-w-[1400px] border-l border-r border-border 2xl:max-w-[1600px]">
+        <section className="border-b border-border bg-white bg-dots px-6 py-12 sm:px-10 sm:py-16 lg:px-12 lg:py-20">
           <div className="relative">
-          <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-12 md:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] md:items-center">
+          <div className="mx-auto grid w-full max-w-none grid-cols-1 gap-10 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] md:items-center xl:gap-16">
             <div className="order-1">
               <div className="aspect-[5/3] w-full overflow-visible">
                 <img
@@ -70,7 +70,7 @@ export default async function PortfolioPage() {
         {projects.map((project) => (
           <section
             key={project.slug}
-            className="border-b border-border bg-white px-4 py-10 sm:px-6 sm:py-12"
+            className="border-b border-border bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-10"
           >
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 md:items-center">
               {project.cover_url ? (

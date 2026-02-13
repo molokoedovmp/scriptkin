@@ -87,7 +87,7 @@ export default function AboutPage() {
         </div>
 
         <div className="mt-10 flex items-center gap-3 text-xs text-muted-foreground">
-          <img src="/Skriptkin.png" alt="Scriptkin" className="h-6 w-auto object-contain" />
+          <img src="/Skriptkin.png" alt="Scriptkin" className="h-14 w-auto object-contain" />
           <span>© {new Date().getFullYear()} Скрипткин. Все права защищены.</span>
         </div>
       </section>
