@@ -1,5 +1,6 @@
 services:
   web:
+    build: .
     image: scriptkin-web
     container_name: scriptkin-web
     restart: unless-stopped
