@@ -48,10 +48,10 @@ export function StackRadarChart() {
           config={chartConfig}
           className="mx-auto aspect-square w-full max-h-[420px] max-w-[420px]"
         >
-          <RadarChart data={chartData} margin={{ top: 24, right: 32, bottom: 24, left: 32 }}>
+          <RadarChart data={chartData} margin={{ top: 32, right: 40, bottom: 32, left: 40 }}>
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <PolarGrid gridType="circle" />
-            <PolarAngleAxis dataKey="tech" tick={{ fontSize: 12 }} tickMargin={12} />
+            <PolarAngleAxis dataKey="tech" tick={{ fontSize: 12 }} />
             <Radar
               dataKey="readiness"
               fill="var(--color-readiness)"
