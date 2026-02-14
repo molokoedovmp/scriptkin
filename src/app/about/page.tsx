@@ -2,7 +2,9 @@ import Link from "next/link";
 
 export const metadata = {
   title: "О нас — Скрипткин",
-  description: "Кто мы, как работаем и почему с нами удобно запускать и поддерживать продукты.",
+  description:
+    "Кто мы, как работаем и почему с нами удобно запускать и поддерживать продукты.",
+  keywords: ["о нас", "студия", "веб-студия", "процесс", "разработка"],
 };
 
 export default function AboutPage() {

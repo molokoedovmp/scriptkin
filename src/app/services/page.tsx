@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { query } from "@/utils/db";
@@ -15,8 +16,11 @@ type Service = {
 
 export const revalidate = 0;
 
-export const metadata = {
-  title: "Услуги и этапы — Скрипткин",
+export const metadata: Metadata = {
+  title: "Услуги — Скрипткин",
+  description:
+    "Проектирование, дизайн, разработка и запуск сайтов. Подключаемся на любом этапе и доводим до стабильного релиза.",
+  keywords: ["услуги", "разработка сайтов", "дизайн", "Next.js", "веб-студия"],
 };
 
 export default async function ServicesPage() {

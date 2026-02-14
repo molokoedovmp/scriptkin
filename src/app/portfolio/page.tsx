@@ -1,12 +1,27 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { query } from "@/utils/db";
 
 
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Портфолио — Скрипткин",
+  description:
+    "Проекты студии «Скрипткин»: сайты, лендинги и продуктовые интерфейсы для SaaS и e‑commerce.",
+  keywords: [
+    "портфолио",
+    "кейсы",
+    "веб-студия",
+    "лендинги",
+    "SaaS",
+    "e-commerce",
+  ],
+};
 
 async function getProjects() {
   try {
