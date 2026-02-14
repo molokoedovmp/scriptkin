@@ -22,22 +22,56 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Скрипткин — разработка сайтов под ключ",
+  title: {
+    default: "Скрипткин — разработка сайтов под ключ",
+    template: "%s — Скрипткин",
+  },
   description:
     "Студия «Скрипткин» проектирует, дизайнит и разворачивает сайты на современных технологиях: от прототипа до продакшена.",
+  applicationName: "Скрипткин",
+  keywords: [
+    "разработка сайтов",
+    "веб-студия",
+    "Next.js",
+    "дизайн",
+    "фронтенд",
+    "лендинги",
+    "SaaS",
+    "e-commerce",
+  ],
+  authors: [{ name: "Скрипткин" }],
+  creator: "Скрипткин",
   icons: {
-    icon: [
-      { url: "/favicon.png", type: "image/png", sizes: "32x32" },
-      { url: "/logo.png", type: "image/png", sizes: "512x512" },
-    ],
-    shortcut: "/favicon.png",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
     apple: "/logo.png",
   },
   openGraph: {
     title: "Скрипткин — разработка сайтов под ключ",
     description:
       "Студия «Скрипткин» проектирует, дизайнит и разворачивает сайты на современных технологиях: от прототипа до продакшена.",
-    images: ["/logo.png"],
+    type: "website",
+    locale: "ru_RU",
+    siteName: "Скрипткин",
+    images: [],
+  },
+  twitter: {
+    card: "summary",
+    title: "Скрипткин — разработка сайтов под ключ",
+    description:
+      "Студия «Скрипткин» проектирует, дизайнит и разворачивает сайты на современных технологиях: от прототипа до продакшена.",
+    images: [],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "none",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
 };
 
