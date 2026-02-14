@@ -168,3 +168,17 @@
   background-size: 22px 22px;
   background-position: top left;
 }
+
+/* BlockNote viewer: stretch to full container width */
+.blocknote-full .bn-container,
+.blocknote-full .bn-editor,
+.blocknote-full .bn-content {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.blocknote-full {
+  --bn-container-width: 100% !important;
+}

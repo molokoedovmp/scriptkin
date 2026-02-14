@@ -50,13 +50,13 @@ export default function BlockNoteViewer({ content, className }: Props) {
   });
 
   return (
-    <div className={className}>
+    <div className={`blocknote-full ${className || ""}`.trim()}>
       {isMounted ? (
         <BlockNoteView
           editor={editor}
           editable={false}
           theme="light"
-          className="bg-transparent !border-0 !shadow-none !ring-0 !outline-none"
+          className="bg-transparent !border-0 !shadow-none !ring-0 !outline-none w-full max-w-none"
         />
       ) : (
         <p className="text-sm text-muted-foreground">Информация пока не добавлена.</p>
