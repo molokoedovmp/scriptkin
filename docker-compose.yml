@@ -9,6 +9,6 @@ services:
       - 1.1.1.1
       - 8.8.8.8
     extra_hosts:
-      - "s3.skriptkin.ru:95.163.231.171"
+      - "s3.skriptkin.ru:95.81.115.48"
     ports:
       - "3004:3004"
