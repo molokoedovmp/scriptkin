@@ -79,8 +79,8 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground bg-subtle-grid">
       <div className="mx-auto w-full max-w-[1400px] border-l border-r border-border 2xl:max-w-[1600px]">
         {/* Центрированный hero с Threads на фоне (75% высоты экрана) */}
-        <section className="relative flex min-h-[75vh] items-center justify-center overflow-hidden border-b border-border bg-white px-6 py-16 sm:py-24">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <section className="relative flex min-h-[75vh] items-center sm:items-start justify-center overflow-hidden border-b border-border bg-white px-6 py-16 sm:py-24">
+          <div className="pointer-events-none absolute inset-0 sm:top-[40%] overflow-hidden">
             <Threads
               color={[0.9803921568627451,0.9686274509803922,0.9921568627450981]}
               amplitude={1.8}
@@ -92,7 +92,7 @@ export default function Home() {
             <p className="text-xs uppercase tracking-[0.08em] text-muted-foreground">
               Скрипткин 
             </p>
-            <h1 className="text-3xl font-semibold sm:text-5xl">
+            <h1 className="text-3xl font-semibold sm:text-4xl">
               Создаём и запускаем сайты на современных технологиях
             </h1>
             <p className="text-base text-muted-foreground sm:text-lg">
@@ -224,7 +224,7 @@ export default function Home() {
                 </Link>
               </Button>
               <Button variant="outline" className="rounded-none">
-                <Link href="mailto:hello@scriptkin.studio">hello@scriptkin.studio</Link>
+                <Link href="mailto:skriptkin@proton.me">skriptkin@proton.me</Link>
               </Button>
             </div>
           </div>
