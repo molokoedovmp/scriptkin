@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
 import type { Metadata } from "next";
@@ -89,13 +90,17 @@ export default async function PortfolioPage() {
           >
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 md:items-center">
               {project.cover_url ? (
-                <div
-                  className="aspect-[4/3] w-full bg-cover bg-center"
-                  style={{ backgroundImage: `url('${project.cover_url}')` }}
-                  aria-hidden
-                />
+                <div className="relative aspect-4/3 w-full overflow-hidden">
+                  <Image
+                    src={project.cover_url}
+                    alt={project.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
               ) : (
-                <div className="aspect-[4/3] w-full bg-muted" aria-hidden />
+                <div className="aspect-4/3 w-full bg-muted" aria-hidden />
               )}
               <div className="space-y-4">
                 <h2 className="text-2xl font-semibold sm:text-3xl">{project.title}</h2>
