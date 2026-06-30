@@ -23,6 +23,8 @@ function getPool() {
   const pool = new Pool({
     connectionString,
     ssl,
+    connectionTimeoutMillis: 5000,
+    idleTimeoutMillis: 30000,
   });
 
   if (process.env.NODE_ENV !== "production") {
