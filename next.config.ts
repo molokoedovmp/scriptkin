@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         port: "9000",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "s3.skriptkin.ru",
+        pathname: "/**",
+      },
     ],
     formats: ["image/avif", "image/webp"],
   },
